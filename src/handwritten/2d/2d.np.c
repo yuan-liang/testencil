@@ -142,7 +142,8 @@ int main(int argc, char * argv[]) {
 				ymax = min(NY+YSLOPE, ybottom02[level] + (n/xnb02[level]) * iy + by + tb*YSLOPE - myabs(t+1,tt+tb) * YSLOPE);
 
 				for(x = xmin; x < xmax; x++) {
-#pragma simd
+#pragma ivdep
+#pragma vector always
 					for(y = ymin; y < ymax; y++) {
 						kernel(A);
 					}
@@ -170,7 +171,8 @@ int main(int argc, char * argv[]) {
 
 				}
 				for(x = xmin; x < xmax; x++) {
-#pragma simd
+#pragma ivdep
+#pragma vector always
 					for(y = ymin; y < ymax; y++) {
 						kernel(A);
 					}

@@ -1,7 +1,7 @@
 
 CC = icc
 #CHECK = -DCHECK
-CFLAGS = -O3 $(CHECK) -xHost -ansi-alias -ipo -fp-model precise -openmp
+CFLAGS = -O3 $(CHECK) -xHost -ansi-alias -ipo -fp-model precise -qopenmp
 
 all: exe_3d 
 exe_3d: exe_3d7p exe_3d27p

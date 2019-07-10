@@ -134,7 +134,8 @@ int main(int argc, char * argv[]) {
 
 				for(x = xmin; x < xmax; x++) {
 					for(y = ymin; y < ymax; y++) {
-#pragma simd
+#pragma ivdep
+#pragma vector always
 						for (z = ZSLOPE; z < NZ+ZSLOPE; z++) {
 							kernel(A);
 						}
@@ -164,7 +165,8 @@ int main(int argc, char * argv[]) {
 				}
 				for(x = xmin; x < xmax; x++) {
 					for(y = ymin; y < ymax; y++) {
-#pragma simd
+#pragma ivdep
+#pragma vector always
 						for (z = ZSLOPE; z < NZ+ZSLOPE; z++) {
 							kernel(A);
 						}

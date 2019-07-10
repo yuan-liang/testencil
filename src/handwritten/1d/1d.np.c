@@ -71,7 +71,8 @@ int main(int argc, char * argv[]) {
 			for(t= max(tt, 0) ; t <min( tt + 2*tb,  T); t++){
 				xmin = max(   XSLOPE, xright[level] - Bx + xx*ix + myabs((tt+tb),(t+1))*XSLOPE);
 				xmax = min( N+XSLOPE, xright[level]      + xx*ix - myabs((tt+tb),(t+1))*XSLOPE);
-#pragma simd
+#pragma ivdep
+#pragma vector always
 				for(x = xmin; x < xmax; x++){
 					kernel(A);
 				}

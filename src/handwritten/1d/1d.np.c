@@ -6,7 +6,8 @@
 #define max(x,y)    ((x) > (y)? (x) : (y))
 #define min(x,y)    ((x) < (y)? (x) : (y))
 #define myabs(x,y)  ((x) > (y)? ((x)-(y)) : ((y)-(x))) 
-
+#define myceil(x,y)  (int)ceil(((double)x)/((double)y)) // if x and y are integers, myceil(x,y) = (x-1)/y + 1
+#define myfloor(x,y)  (int)floor(((double)x)/((double)y)) // if x and y are integers, myceil(x,y) = (x-1)/y + 1
 
 #if !defined(point)
 #define point 3
@@ -54,10 +55,10 @@ int main(int argc, char * argv[]) {
 #endif
 	}
 
-
-	int ix = Bx + Bx - 2 * tb * XSLOPE;
-	int xright[2] = {Bx + XSLOPE,  Bx + XSLOPE - ix/2};
-	int nb0[2] = {(N + Bx - (xright[0] - XSLOPE) - 1)/ix + 1, (N + Bx - (xright[1] - XSLOPE) - 1)/ix + 1};
+	int bx = Bx - 2 * tb * XSLOPE;
+	int ix = Bx + bx;   // ix is even
+	int xright[2] = {ix + XSLOPE,  ix + XSLOPE - ix/2};
+	int nb0[2] = { myfloor(N,ix), myceil(N + (Bx - bx)/2, ix)};
 
 	int level = 0;
 	int x, xx, t, tt;
@@ -82,7 +83,7 @@ int main(int argc, char * argv[]) {
 	}
 
 	gettimeofday(&end, 0);
-	printf("MStencil/s = %f\n",((double)N * T) / (double)(end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) * 1.0e-6) / 1000000L);
+	printf("GStencil/s = %f\n",((double)N * T) / (double)(end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) * 1.0e-6) / 1000000000L);
 
 #ifdef CHECK
 	for (t = 0; t < T; t++) {

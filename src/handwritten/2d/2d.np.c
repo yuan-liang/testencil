@@ -110,19 +110,19 @@ int main(int argc, char * argv[]) {
 	int xnb2 = max(xnb11,xnb0);
 	int ynb2 = max(ynb12,ynb0);
 
-	int nb1[2] = {xnb12 * ynb12, xnb11 * ynb11};
-	int nb02[2] = {xnb2 * ynb2, xnb0 * ynb0};
-	int xnb1[2] = {xnb12, xnb11};
-	int xnb02[2] = {xnb2, xnb0};
+	int nb1[2] = {xnb11 * ynb11, xnb12 * ynb12};
+	int nb02[2] = {xnb0 * ynb0, xnb2 * ynb2};
+	int xnb1[2] = {xnb11, xnb12};
+	int xnb02[2] = {xnb0, xnb2};
 
-	int xleft02[2] = {XSLOPE-bx, XSLOPE+(Bx-bx)/2};
-	int ybottom02[2] = {YSLOPE-by, YSLOPE+(By-by)/2};
-	int xleft11[2] = {XSLOPE+(Bx-bx)/2, XSLOPE - bx};
-	int ybottom11[2] = {YSLOPE-(By+by)/2, YSLOPE};
-	int xleft12[2] = {XSLOPE-(Bx+bx)/2, XSLOPE};
-	int ybottom12[2] = {YSLOPE+(By-by)/2, YSLOPE-by};
+	int xleft02[2] = {XSLOPE+(Bx-bx)/2, XSLOPE-bx};
+	int ybottom02[2] = {YSLOPE+(By-by)/2, YSLOPE-by};
+	int xleft11[2] = {XSLOPE - bx, XSLOPE+(Bx-bx)/2};
+	int ybottom11[2] = {YSLOPE, YSLOPE-(By+by)/2};
+	int xleft12[2] = {XSLOPE, XSLOPE-(Bx+bx)/2};
+	int ybottom12[2] = {YSLOPE-by, YSLOPE+(By-by)/2};
 
-	int level = 1;
+	int level = 0;
 	int tt,n;
 	int x, y;
 	register int ymin, ymax;

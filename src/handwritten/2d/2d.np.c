@@ -13,7 +13,7 @@
 #endif
 
 #if point == 5
-#define  kernel(A)  A[(t+1)%2][x][y] = 0.125 * (A[t%2][x+1][y] - 2.0 * A[t%2][x][y] + A[t%2][x-1][y]) + \
+#define  kernel(A) /*printf("%d\t%d\n",x,y);*/ A[(t+1)%2][x][y] = 0.125 * (A[t%2][x+1][y] - 2.0 * A[t%2][x][y] + A[t%2][x-1][y]) + \
 									   0.125 * (A[t%2][x][y+1] - 2.0 * A[t%2][x][y] + A[t%2][x][y-1]) + \
 									   A[t%2][x][y];
 #define XSLOPE 1
@@ -99,28 +99,28 @@ int main(int argc, char * argv[]) {
 	int by = By-2*(tb*YSLOPE);
 
 	int ix = Bx+bx;
-	int iy = By+by;
+	int iy = By+by; // ix and iy are even.
 
-	int xnb0 = ceild(NX,ix);
-	int ynb0 = ceild(NY,iy);
-	int xnb11 = ceild(NX-ix/2+1,ix) + 1;
-	int ynb12 = ceild(NY-iy/2+1,iy) + 1;
-	int xnb12 = xnb0;
+	int xnb0  = ceild(NX,ix);
+	int ynb0  = ceild(NY,iy);
+	int xnb11 = ceild(NX+(Bx-bx)/2,ix); // the start x dimension of B11 is bx,
+	int ynb12 = ceild(NY+(By-by)/2,iy); // for periodic boundary stencils xnb11 and ynb12 must be larger than 2.
 	int ynb11 = ynb0;
-	int xnb2 = max(xnb11,xnb0);
-	int ynb2 = max(ynb12,ynb0);
+	int xnb12 = xnb0;
+	int xnb2  = xnb11;
+	int ynb2  = ynb12;
 
-	int nb1[2] = {xnb11 * ynb11, xnb12 * ynb12};
-	int nb02[2] = {xnb0 * ynb0, xnb2 * ynb2};
-	int xnb1[2] = {xnb11, xnb12};
+	int nb1[2]   = {xnb11 * ynb11, xnb12 * ynb12};
+	int nb02[2]  = {xnb0 * ynb0, xnb2 * ynb2};
+	int xnb1[2]  = {xnb11, xnb12};
 	int xnb02[2] = {xnb0, xnb2};
 
-	int xleft02[2] = {XSLOPE+(Bx-bx)/2, XSLOPE-bx};
-	int ybottom02[2] = {YSLOPE+(By-by)/2, YSLOPE-by};
-	int xleft11[2] = {XSLOPE - bx, XSLOPE+(Bx-bx)/2};
-	int ybottom11[2] = {YSLOPE, YSLOPE-(By+by)/2};
-	int xleft12[2] = {XSLOPE, XSLOPE-(Bx+bx)/2};
-	int ybottom12[2] = {YSLOPE-by, YSLOPE+(By-by)/2};
+	int xleft02[2]   = {XSLOPE + bx, XSLOPE - (Bx-bx)/2};
+	int ybottom02[2] = {YSLOPE + by, YSLOPE - (By-by)/2};
+	int xleft11[2]   = {XSLOPE,		 XSLOPE + ix/2};
+	int ybottom11[2] = {YSLOPE + by, YSLOPE - (By-by)/2};
+	int xleft12[2]   = {XSLOPE + bx, XSLOPE - (Bx-bx)/2};
+	int ybottom12[2] = {YSLOPE,		 YSLOPE + iy/2};
 
 	int level = 0;
 	int tt,n;
@@ -136,10 +136,10 @@ int main(int argc, char * argv[]) {
 
 			for(t = max(tt,0); t < min(tt + 2*tb, T); t++) { 
 
-				xmin = max(   XSLOPE,   xleft02[level] + (n%xnb02[level]) * ix      - tb*XSLOPE + myabs(t+1,tt+tb) * XSLOPE);
-				xmax = min(NX+XSLOPE,   xleft02[level] + (n%xnb02[level]) * ix + bx + tb*XSLOPE - myabs(t+1,tt+tb) * XSLOPE);
-				ymin = max(   YSLOPE, ybottom02[level] + (n/xnb02[level]) * iy      - tb*YSLOPE + myabs(t+1,tt+tb) * YSLOPE);
-				ymax = min(NY+YSLOPE, ybottom02[level] + (n/xnb02[level]) * iy + by + tb*YSLOPE - myabs(t+1,tt+tb) * YSLOPE);
+				xmin = max(   XSLOPE,   xleft02[level] + (n%xnb02[level]) * ix      + myabs(t+1,tt+tb) * XSLOPE);
+				xmax = min(NX+XSLOPE,   xleft02[level] + (n%xnb02[level]) * ix + Bx - myabs(t+1,tt+tb) * XSLOPE);
+				ymin = max(   YSLOPE, ybottom02[level] + (n/xnb02[level]) * iy      + myabs(t+1,tt+tb) * YSLOPE);
+				ymax = min(NY+YSLOPE, ybottom02[level] + (n/xnb02[level]) * iy + By - myabs(t+1,tt+tb) * YSLOPE);
 
 				for(x = xmin; x < xmax; x++) {
 #pragma ivdep

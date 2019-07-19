@@ -13,7 +13,7 @@
 #endif
 
 #if point == 5
-#define  kernel(A) /*printf("%d\t%d\n",x,y);*/ A[(t+1)%2][x][y] = 0.125 * (A[t%2][x+1][y] - 2.0 * A[t%2][x][y] + A[t%2][x-1][y]) + \
+#define  kernel(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x+1][y] - 2.0 * A[t%2][x][y] + A[t%2][x-1][y]) + \
 									   0.125 * (A[t%2][x][y+1] - 2.0 * A[t%2][x][y] + A[t%2][x][y-1]) + \
 									   A[t%2][x][y];
 #define XSLOPE 1

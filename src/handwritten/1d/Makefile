@@ -1,10 +1,11 @@
 
 CC = icc
-#CHECK = -DCHECK
+CHECK = -DCHECK
+#DEBUG = -Ddebug
 
 
 ifeq ($(CC), icc)
-        CFLAGS = -O3 $(CHECK) -xHost -ansi-alias -ipo -fp-model precise -parallel -qopenmp
+        CFLAGS = -O3 $(CHECK) $(DEBUG) -xHost -ansi-alias -ipo -fp-model precise -parallel -qopenmp
 else
         # for gcc
        CFLAGS   = -O3 $(check) -march=native -mtune=native -ftree-vectorize   -fopenmp

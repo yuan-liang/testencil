@@ -83,7 +83,7 @@ int main(int argc, char * argv[]) {
 	int ix = Bx + bx;
 
 	int nblock = myfloor(N, ix);
-	int nrestpoints = N % (Bx + bx);
+	int nrestpoints = N % ix;
 
 	int bx_first_B1 = (bx + nrestpoints)/2;
 	int bx_last_B1  = (bx + nrestpoints) - bx_first_B1;
@@ -116,26 +116,23 @@ int main(int argc, char * argv[]) {
 				}
 			}
 			else{
-				for(t= max(tt, 0) ; t <min( tt + 2*tb,  T); t++){
-
+				for(t=tt ; t <min( tt + 2*tb,  T); t++){
+					xmax =     bx_first_B1 + tb * XSLOPE - myabs((tt+tb),(t+1))*XSLOPE;
+					xmin = N - bx_last_B1  - tb * XSLOPE + myabs((tt+tb),(t+1))*XSLOPE;
 					for(x = 0; x < XSLOPE; x++){
 						kernel_boundary(A);
 					}
-					xmin = XSLOPE;
-					xmax = bx_first_B1 + tb * XSLOPE - myabs((tt+tb),(t+1))*XSLOPE;
 #pragma ivdep
 #pragma vector always
-					for(x = xmin; x < xmax; x++){
+					for(; x < xmax; x++){
 						kernel(A);
 					}
-					xmin = N - bx_last_B1  - tb * XSLOPE + myabs((tt+tb),(t+1))*XSLOPE;
-					xmax = N - XSLOPE;
 #pragma ivdep
 #pragma vector always
-					for(x = xmin; x < xmax; x++){
+					for(x = xmin; x < N-XSLOPE; x++){
 						kernel(A);
 					}
-					for(x = N - XSLOPE; x < N; x++){
+					for(; x < N; x++){
 						kernel_boundary(A);
 					}
 				}
@@ -145,7 +142,7 @@ int main(int argc, char * argv[]) {
 	}
 
 	gettimeofday(&end, 0);
-	printf("MStencil/s = %f\n",((double)N * T) / (double)(end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) * 1.0e-6) / 1000000L);
+	printf("GStencil/s = %f\n",((double)N * T) / (double)(end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) * 1.0e-6) / 1000000000L);
 
 #ifdef CHECK
 	for (t = 0; t < T; t++) {

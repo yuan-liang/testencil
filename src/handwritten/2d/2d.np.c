@@ -3,7 +3,7 @@
 #include <sys/time.h>
 #include <omp.h>
 
-#define ceild(n,d)  ceil(((double)(n))/((double)(d)))
+#define ceild(n,d)	(((n)-1)/(d) + 1)// ceil(((double)(n))/((double)(d)))
 #define max(x,y)    ((x) > (y)? (x) : (y))
 #define min(x,y)    ((x) < (y)? (x) : (y))
 #define myabs(x,y)  (((x) > (y))? ((x)-(y)) : ((y)-(x)))
@@ -101,10 +101,10 @@ int main(int argc, char * argv[]) {
 	int ix = Bx+bx;
 	int iy = By+by; // ix and iy are even.
 
-	int xnb0  = ceild(NX,ix);
-	int ynb0  = ceild(NY,iy);
-	int xnb11 = ceild(NX+(Bx-bx)/2,ix); // the start x dimension of B11 is bx,
-	int ynb12 = ceild(NY+(By-by)/2,iy); // for periodic boundary stencils xnb11 and ynb12 must be larger than 2.
+	int xnb0  = ceild(NX-bx,ix);
+	int ynb0  = ceild(NY-by,iy);
+	int xnb11 = ceild(NX+(Bx-bx)/2,ix);
+	int ynb12 = ceild(NY+(By-by)/2,iy);
 	int ynb11 = ynb0;
 	int xnb12 = xnb0;
 	int xnb2  = xnb11;
@@ -115,13 +115,14 @@ int main(int argc, char * argv[]) {
 	int xnb1[2]  = {xnb11, xnb12};
 	int xnb02[2] = {xnb0, xnb2};
 
-	int xleft02[2]   = {XSLOPE + bx, XSLOPE - (Bx-bx)/2};
-	int ybottom02[2] = {YSLOPE + by, YSLOPE - (By-by)/2};
+	int xleft02[2]   = {XSLOPE + bx, XSLOPE - (Bx-bx)/2}; // the start x dimension of the first B11 block is bx
+	int ybottom02[2] = {YSLOPE + by, YSLOPE - (By-by)/2}; // the start y dimension of the first B11 block is by
 	int xleft11[2]   = {XSLOPE,		 XSLOPE + ix/2};
 	int ybottom11[2] = {YSLOPE + by, YSLOPE - (By-by)/2};
 	int xleft12[2]   = {XSLOPE + bx, XSLOPE - (Bx-bx)/2};
 	int ybottom12[2] = {YSLOPE,		 YSLOPE + iy/2};
 
+	printf("%d\t%d\n", NX - xnb0 * ix, NY - ynb0 * iy);
 	int level = 0;
 	int tt,n;
 	int x, y;
@@ -130,7 +131,7 @@ int main(int argc, char * argv[]) {
 
 	gettimeofday(&start,0);
 
-	for(tt =- tb; tt < T; tt += tb){
+	for(tt = -tb; tt < T; tt += tb){
 #pragma omp parallel for schedule(dynamic)  private(xmin,xmax,ymin,ymax,t,x,y)
 		for(n = 0; n < nb02[level]; n++){
 
@@ -151,7 +152,6 @@ int main(int argc, char * argv[]) {
 			}
 		}
 
-
 #pragma omp parallel for schedule(dynamic)  private(xmin,xmax,ymin,ymax,t,x,y)
 		for(n = 0; n < nb1[0] + nb1[1]; n++) {
 
@@ -163,7 +163,6 @@ int main(int argc, char * argv[]) {
 					ymax = min(NY + YSLOPE, ybottom11[level] + (n/xnb1[level]) * iy  + By - (t+1-tt-tb) * YSLOPE);
 				}
 				else {
-
 					xmin = max(     XSLOPE,   xleft12[level] + ((n-nb1[level])%xnb1[1-level]) * ix      + (t+1-tt-tb) * XSLOPE);
 					xmax = min(NX + XSLOPE,   xleft12[level] + ((n-nb1[level])%xnb1[1-level]) * ix + Bx - (t+1-tt-tb) * XSLOPE);
 					ymin = max(     YSLOPE, ybottom12[level] + ((n-nb1[level])/xnb1[1-level]) * iy      - (t+1-tt-tb) * YSLOPE);
@@ -179,12 +178,12 @@ int main(int argc, char * argv[]) {
 				}
 			}
 		}
-		level = 1- level;
+		level = 1 - level;
 	}
 
 	gettimeofday(&end,0);
 
-	printf("MStencil/s = %f\n", ((double)NX * NY * T) / (double)(end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) * 1.0e-6) / 1000000L);
+	printf("GStencil/s = %f\n", ((double)NX * NY * T) / (double)(end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) * 1.0e-6) / 1000000000L);
 
 #ifdef CHECK
 	for (t = 0; t < T; t++) {

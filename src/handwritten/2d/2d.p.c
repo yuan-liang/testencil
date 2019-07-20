@@ -154,7 +154,7 @@ int main(int argc, char * argv[]) {
 	int ynb2  = ynb0;
 
 	int nb02[2]  = {xnb0 * ynb0, xnb2 * ynb2};
-	int nb1[2]   = {xnb11 * ynb11, xnb12 * ynb12};
+	int nb1[2]   = {(xnb11-1) * ynb11, xnb12 * (ynb12-1)};
 	int xnb02[2] = {xnb0, xnb2-1};
 	int xnb1[2]  = {xnb11-1, xnb12};
 	/*
@@ -372,7 +372,7 @@ int main(int argc, char * argv[]) {
 		}
 
 #pragma omp parallel for schedule(dynamic)  private(xmin,xmax,ymin,ymax,t,x,y)
-		for(n = 0; n < nb1[0] + nb1[1]; n++) {
+		for(n = 0; n < xnb11 * ynb11 + xnb12 * ynb12; n++) {
 			if(n < (xnb11-1) * ynb11 + xnb12 * (ynb12 - 1)){
 				for(t = tt + tb; t < min(tt + 2*tb, T); t++) {
 					if(n < nb1[level]) {
@@ -440,14 +440,14 @@ int main(int argc, char * argv[]) {
 			else{ // processing bottom row B1 blocks
 				for(t = tt + tb; t < min(tt + 2*tb, T); t++) {
 					if(level == 0) {
-						xmin = bx_last_B11 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix      + (t+1-tt-tb) * XSLOPE;
-						xmax = bx_last_B11 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix + Bx - (t+1-tt-tb) * XSLOPE;
+						xmin = bx_first_B11 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix      + (t+1-tt-tb) * XSLOPE;
+						xmax = bx_first_B11 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix + Bx - (t+1-tt-tb) * XSLOPE;
 						ymin = NY - by_last_B12 - (t+1-tt-tb) * YSLOPE;
 						ymax =     by_first_B12 + (t+1-tt-tb) * YSLOPE;
 					}
 					else {
-						xmin = bx_last_B11 + (Bx - bx)/2 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix      - (t+1-tt-tb) * XSLOPE;
-						xmax = bx_last_B11 + (Bx - bx)/2 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix + bx + (t+1-tt-tb) * XSLOPE;
+						xmin = bx_first_B11 + (Bx - bx)/2 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix      - (t+1-tt-tb) * XSLOPE;
+						xmax = bx_first_B11 + (Bx - bx)/2 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix + bx + (t+1-tt-tb) * XSLOPE;
 						ymin = NY - by_last_B12 - (t+1-tt-tb) * YSLOPE - (By - by)/2;
 						ymax =     by_first_B12 + (t+1-tt-tb) * YSLOPE + (By - by)/2;
 					}

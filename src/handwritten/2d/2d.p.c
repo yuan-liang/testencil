@@ -14,37 +14,78 @@
 #define point 5
 #endif
 
+
+int updatedpionts = 0;
+
 #if point == 5
-#define  kernel(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x+1][y] - 2.0 * A[t%2][x][y] + A[t%2][x-1][y]) + \
+
+#ifdef CHECK
+
+#define  kernel(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x+1][y] - 2.0 * A[t%2][x][y] + A[t%2][x-1][y]) + \
 									  0.125 * (A[t%2][x][y+1] - 2.0 * A[t%2][x][y] + A[t%2][x][y-1]) + \
 A[t%2][x][y];
-#define  kernel_boundary_left(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_left(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 													0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary_right(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_right(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 													 0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary_top(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_top(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 												   0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary_bottom(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_bottom(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 													  0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary_left_bottom(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_left_bottom(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 														   0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary_left_top(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_left_top(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 														0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary_right_bottom(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_right_bottom(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 															0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary_right_top(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary_right_top(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 														 0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
-#define  kernel_boundary(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+#define  kernel_boundary(A) updatedpionts++;A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
 											   0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
 A[t%2][x][y];
+#else
+
+#define  kernel(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x+1][y] - 2.0 * A[t%2][x][y] + A[t%2][x-1][y]) + \
+																		  0.125 * (A[t%2][x][y+1] - 2.0 * A[t%2][x][y] + A[t%2][x][y-1]) + \
+A[t%2][x][y];
+#define  kernel_boundary_left(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																										0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary_right(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																										 0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary_top(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																								   0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary_bottom(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																										  0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary_left_bottom(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																												   0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary_left_top(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																												0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary_right_bottom(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																														0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary_right_top(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																												 0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+#define  kernel_boundary(A) A[(t+1)%2][x][y] = 0.125 * (A[t%2][x==NX-1?0:(x+1)][y] - 2.0 * A[t%2][x][y] + A[t%2][x==0?(NX-1):(x-1)][y]) + \
+																						   0.125 * (A[t%2][x][y==NY-1?0:(y+1)] - 2.0 * A[t%2][x][y] + A[t%2][x][y==0?(NY-1):(y-1)]) + \
+A[t%2][x][y];
+
+
+#endif
 #define XSLOPE 1
 #define YSLOPE 1
 #define DATA_TYPE double
@@ -112,7 +153,7 @@ int main(int argc, char * argv[]) {
 
 	for (i = 0; i < NX; i++) {
 		for (j = 0; j < NY; j++) {
-			A[0][i][j] = (DATA_TYPE) (1.0 * (rand() % 1024));
+			A[0][i][j] = 0;//(DATA_TYPE) (1.0 * (rand() % 1024));
 #if  point == 0
 			A[0][i][j] = ((int)A[0][i][j])%2;
 #endif
@@ -448,8 +489,8 @@ int main(int argc, char * argv[]) {
 					else {
 						xmin = bx_first_B11 + (Bx - bx)/2 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix      - (t+1-tt-tb) * XSLOPE;
 						xmax = bx_first_B11 + (Bx - bx)/2 + (n - xnb11 * ynb11 - xnb12 * (ynb12 - 1)) * ix + bx + (t+1-tt-tb) * XSLOPE;
-						ymin = NY - by_last_B12 - (t+1-tt-tb) * YSLOPE - (By - by)/2;
-						ymax =     by_first_B12 + (t+1-tt-tb) * YSLOPE + (By - by)/2;
+						ymin = NY - by_last_B12 + (t+1-tt-tb) * YSLOPE - (By - by)/2;
+						ymax =     by_first_B12 - (t+1-tt-tb) * YSLOPE + (By - by)/2;
 					}
 
 					for(x = xmin; x < xmax; x++) {
@@ -483,6 +524,10 @@ int main(int argc, char * argv[]) {
 	}
 
 	gettimeofday(&end,0);
+
+#ifdef CHECK	
+	printf("%d\t%d\n", updatedpionts, NX * NY * T);
+#endif
 
 	printf("GStencil/s = %f\n", ((double)NX * NY * T) / (double)(end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) * 1.0e-6) / 1000000000L);
 

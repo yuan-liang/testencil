@@ -57,8 +57,13 @@ int main(int argc, char * argv[]) {
 
 	int bx = Bx - 2 * tb * XSLOPE;
 	int ix = Bx + bx;   // ix is even
-	int xright[2] = {ix + XSLOPE,  ix + XSLOPE - ix/2};
-	int nb0[2] = { myfloor(N,ix), myceil(N + (Bx - bx)/2, ix)};
+	int nb0[2] = { myfloor(N-Bx,ix), myfloor(N-Bx,ix) + 1 };
+	
+	int nrestpoints = N % ix;
+	int bx_first_B1 = (Bx + nrestpoints)/2;
+	int bx_last_B1  = (Bx + nrestpoints) - bx_first_B1;
+
+	int xright[2] = {bx_first_B1 + Bx + XSLOPE,  bx_first_B1 + (Bx - bx)/2 + XSLOPE};
 
 	int level = 0;
 	int x, xx, t, tt;
@@ -70,8 +75,8 @@ int main(int argc, char * argv[]) {
 #pragma omp parallel for private(xmin,xmax,t,x)
 		for(xx = 0; xx <nb0[level]; xx++) {
 			for(t= max(tt, 0) ; t <min( tt + 2*tb,  T); t++){
-				xmin = max(   XSLOPE, xright[level] - Bx + xx*ix + myabs((tt+tb),(t+1))*XSLOPE);
-				xmax = min( N+XSLOPE, xright[level]      + xx*ix - myabs((tt+tb),(t+1))*XSLOPE);
+				xmin = (level == 1 && xx == 0) ?             XSLOPE : (xright[level] - Bx + xx*ix + myabs((tt+tb),(t+1))*XSLOPE);
+				xmax = (level == 1 && xx == nb0[1] -1) ? N + XSLOPE : (xright[level]      + xx*ix - myabs((tt+tb),(t+1))*XSLOPE);
 #pragma ivdep
 #pragma vector always
 				for(x = xmin; x < xmax; x++){
